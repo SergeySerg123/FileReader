@@ -17,8 +17,8 @@ namespace FileReader
 
         private void RegisterCustomDependencies()
         {
-            LineRepository lineRepository = new LineRepository();
-            WordRepository wordRepository = new WordRepository();
+            LineRepository lineRepository = LineRepository.GetInstance();
+            WordRepository wordRepository = WordRepository.GetInstance();
             LineService lineService = new LineService(lineRepository);
             ComposeService composeService = new ComposeService(lineRepository, wordRepository);
 
