@@ -50,6 +50,7 @@ namespace FileReader.Services
                 sb.AppendFormat("Word - ' {0} ' contains in the lines: {1}", word.Key, ComposeLines(lines));
                 result.Add(sb.ToString());
             }
+            result.Sort();
             return result;
         }
 
