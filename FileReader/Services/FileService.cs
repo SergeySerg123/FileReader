@@ -1,11 +1,12 @@
 ﻿using FileReader.Helpers;
-using System;
+using FileReader.Interfaces;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace FileReader.Services
 {
-    public class FileService
+    public class FileService : IFileService
     {
         private readonly LineService _lineService;
         private readonly ComposeService _composeService;      
@@ -17,8 +18,7 @@ namespace FileReader.Services
             _composeService = composeService;
         }
 
-        // TODO: catch exception
-        public void Read(string path)
+        public async Task Read(string path)
         {
             using var file = new StreamReader(@path);
             var f = file.ReadToEnd();
@@ -34,16 +34,16 @@ namespace FileReader.Services
 
             }
             _composeService.Compose();
-            Write();
+            await Write();
         }
 
-        public void Write()
+        public async Task Write()
         {
             var resultList = _composeService.GetComposedStringsList();
             using StreamWriter sw = new StreamWriter(Settings._outputPath, true);
             foreach(var line in resultList)
             {
-                sw.WriteLine(line);
+                await sw.WriteLineAsync(line);
             }  
         }
     }

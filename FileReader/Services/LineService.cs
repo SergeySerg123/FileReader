@@ -40,7 +40,7 @@ namespace FileReader.Services
 
         private string[] SplitString(string s)
         {
-            char[] separators = new char[] { ' ', '.', '\r' };
+            char[] separators = new char[] { ' ', '.', '!', '?', ';', ':', '\r' };
             string[] words = s.Split(separators, StringSplitOptions.RemoveEmptyEntries);
             return words;
         }
