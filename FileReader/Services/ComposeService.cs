@@ -47,9 +47,10 @@ namespace FileReader.Services
                     lines.Add(line);
                 });
 
-                sb.AppendFormat("Word - ' {0} ' contains in the lines: {1}", word.Key, ComposeLines(lines));
+                sb.AppendFormat("{0}: {1}", word.Key, ComposeLines(lines));
                 result.Add(sb.ToString());
             }
+
             result.Sort();
             return result;
         }
@@ -60,9 +61,9 @@ namespace FileReader.Services
 
             foreach(var lineNumber in lines)
             {
-                sb.AppendFormat(" {0} ", lineNumber);
+                sb.AppendFormat(" {0},", lineNumber);
             }
-
+            sb[^1] = ' ';
             return sb.ToString();
         }
     }
