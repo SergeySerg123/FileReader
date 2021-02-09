@@ -26,7 +26,7 @@ namespace FileReader.Services
 
                 foreach (var w in words)
                 {
-                    var word = Word.Create(lineNumber, w);
+                    var word = Word.Create(lineNumber, w.ToUpper());
                     line.Words.Add(word);
                 }
             }
