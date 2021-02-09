@@ -1,4 +1,6 @@
 ﻿using FileReader.Repositories;
+using System.Collections.Generic;
+using System.Text;
 
 namespace FileReader.Services
 {
@@ -30,6 +32,37 @@ namespace FileReader.Services
                     }
                 });
             }
+        }
+
+        public List<string> GetComposedStringsList()
+        {
+            var result = new List<string>();
+
+            foreach(var word in _wordRepository.Words)
+            {
+                var sb = new StringBuilder();
+                var lines = new SortedSet<int>();
+                word.Value.ForEach(line => 
+                {
+                    lines.Add(line);
+                });
+
+                sb.AppendFormat("Word - ' {0} ' contains in the lines: {1}", word.Key, ComposeLines(lines));
+                result.Add(sb.ToString());
+            }
+            return result;
+        }
+
+        private string ComposeLines(SortedSet<int> lines) 
+        {
+            var sb = new StringBuilder();
+
+            foreach(var lineNumber in lines)
+            {
+                sb.AppendFormat(" {0} ", lineNumber);
+            }
+
+            return sb.ToString();
         }
     }
 }
