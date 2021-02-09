@@ -11,7 +11,7 @@ namespace FileReader.Services
     {
         private readonly LineService _lineService;
         private readonly ComposeService _composeService;
-        private static readonly string _outputPath = $@"{Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)}\Transactions.log";
+        private static readonly string _outputPath = $@"{Directory.GetCurrentDirectory()}..\..\..\..\Transactions.log";
 
         public FileService(LineService lineService,
             ComposeService composeService)
@@ -54,7 +54,7 @@ namespace FileReader.Services
             using StreamWriter sw = new StreamWriter(_outputPath, true);
             foreach(var line in resultList)
             {
-                sw.WriteLine(line + '\n');
+                sw.WriteLine(line);
             }  
         }
 
