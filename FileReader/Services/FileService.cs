@@ -37,7 +37,6 @@ namespace FileReader.Services
             Write();
         }
 
-        // TODO: not implemented
         public void Write()
         {
             var resultList = _composeService.GetComposedStringsList();
