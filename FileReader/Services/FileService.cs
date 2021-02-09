@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 
 namespace FileReader.Services
 {
@@ -10,6 +11,7 @@ namespace FileReader.Services
     {
         private readonly LineService _lineService;
         private readonly ComposeService _composeService;
+        private static readonly string _outputPath = $@"{Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)}\Transactions.log";
 
         public FileService(LineService lineService,
             ComposeService composeService)
@@ -37,6 +39,7 @@ namespace FileReader.Services
 
                 }
                 _composeService.Compose();
+                Write();
             }
             catch (Exception ex)
             {
@@ -45,11 +48,15 @@ namespace FileReader.Services
         }
 
         // TODO: not implemented
-        //public void Write(string logInfo)
-        //{
-        //    using StreamWriter sw = new StreamWriter(OutputPath, true);
-        //    sw.WriteLine(logInfo);
-        //}
+        public void Write()
+        {
+            var resultList = _composeService.GetComposedStringsList();
+            using StreamWriter sw = new StreamWriter(_outputPath, true);
+            foreach(var line in resultList)
+            {
+                sw.WriteLine(line + '\n');
+            }  
+        }
 
         private string[] SplitString(string s)
         {
