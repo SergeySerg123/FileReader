@@ -16,6 +16,7 @@ namespace FileReader.Services
             _wordRepository = wordRepository;
         }
 
+        // Compose words
         public void Compose()
         {
             foreach(var line in _lineRepository.Lines)
@@ -31,28 +32,31 @@ namespace FileReader.Services
                         _wordRepository.AddWord(word);
                     }
                 });
+                _lineRepository.Remove(line.Key); // For memory optimization
             }
         }
 
-        public List<string> GetComposedStringsList()
+        public string[] GetComposedStringsList()
         {
             var result = new List<string>();
 
-            foreach(var word in _wordRepository.Words)
+            foreach (var word in _wordRepository.Words)
             {
                 var sb = new StringBuilder();
                 var lines = new SortedSet<int>();
-                word.Value.ForEach(line => 
-                {
-                    lines.Add(line);
-                });
+
+                while (word.Value.Count > 0) {
+                    lines.Add(word.Value.Dequeue());
+                }
+
+                _wordRepository.RemoveWord(word.Key); // For memory optimization
 
                 sb.AppendFormat("{0}: {1}", word.Key, ComposeLines(lines));
                 result.Add(sb.ToString());
             }
 
             result.Sort();
-            return result;
+            return result.ToArray();
         }
 
         private string ComposeLines(SortedSet<int> lines) 

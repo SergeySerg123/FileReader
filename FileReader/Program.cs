@@ -1,11 +1,12 @@
-﻿namespace FileReader
+﻿using FileReader.Helpers;
+
+namespace FileReader
 {
     class Program
     {
         static void Main(string[] args)
         {
-            Initializer.Build()
-                .InitApp();
+            AppBuilder.CreateDefaultBuilder(args).Run();
         }
     }
 }

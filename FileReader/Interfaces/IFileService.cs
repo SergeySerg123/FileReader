@@ -4,7 +4,7 @@ namespace FileReader.Interfaces
 {
     public interface IFileService
     {
-        Task Read(string path);
+        Task Read();
         Task Write();
     }
 }
