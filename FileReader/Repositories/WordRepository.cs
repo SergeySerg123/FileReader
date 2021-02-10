@@ -5,40 +5,30 @@ namespace FileReader.Repositories
 {
     public class WordRepository
     {
-        private static WordRepository instance = null;
-
-        public Dictionary<string, List<int>> Words { get; private set; } = new Dictionary<string, List<int>>();
+        public Dictionary<string, Queue<int>> Words { get; private set; } = new Dictionary<string, Queue<int>>();
 
         public void AddWord(Word word)
         {
-            var linesList = new List<int>
-            {
-                word.Line
-            };
+            var linesList = new Queue<int>();
+            linesList.Enqueue(word.Line);
             Words.Add(word.Value, linesList);
         }
 
         public void UpdateWord(Word word, int newLine)
         {
             var lines = Words[word.Value];
-            lines.Add(newLine);
+            lines.Enqueue(newLine);
             Words[word.Value] = lines;
+        }
+
+        public void RemoveWord(string key)
+        {
+            Words.Remove(key);
         }
 
         public bool IsContainsValue(Word word)
         {
             return Words.ContainsKey(word.Value);
-        }
-
-        // Singleton instance
-        public static WordRepository GetInstance()
-        {
-            if (instance == null)
-            {
-                instance = new WordRepository();
-            }
-
-            return instance;
         }
     }
 }

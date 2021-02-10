@@ -16,11 +16,12 @@ namespace FileReader.Services
             _wordRepository = wordRepository;
         }
 
+        // Compose words
         public void Compose()
         {
             foreach(var line in _lineRepository.Lines)
             {
-                line.Words.ForEach(word =>
+                line.Value.Words.ForEach(word =>
                 {
                     var IsContains = _wordRepository.IsContainsValue(word);
                     if (IsContains)
@@ -31,27 +32,31 @@ namespace FileReader.Services
                         _wordRepository.AddWord(word);
                     }
                 });
+                _lineRepository.Remove(line.Key); // For memory optimization
             }
         }
 
-        public List<string> GetComposedStringsList()
+        public string[] GetComposedStringsList()
         {
             var result = new List<string>();
 
-            foreach(var word in _wordRepository.Words)
+            foreach (var word in _wordRepository.Words)
             {
                 var sb = new StringBuilder();
                 var lines = new SortedSet<int>();
-                word.Value.ForEach(line => 
-                {
-                    lines.Add(line);
-                });
 
-                sb.AppendFormat("Word - ' {0} ' contains in the lines: {1}", word.Key, ComposeLines(lines));
+                while (word.Value.Count > 0) {
+                    lines.Add(word.Value.Dequeue());
+                }
+
+                _wordRepository.RemoveWord(word.Key); // For memory optimization
+
+                sb.AppendFormat("{0}: {1}", word.Key, ComposeLines(lines));
                 result.Add(sb.ToString());
             }
+
             result.Sort();
-            return result;
+            return result.ToArray();
         }
 
         private string ComposeLines(SortedSet<int> lines) 
@@ -60,9 +65,9 @@ namespace FileReader.Services
 
             foreach(var lineNumber in lines)
             {
-                sb.AppendFormat(" {0} ", lineNumber);
+                sb.AppendFormat(" {0},", lineNumber);
             }
-
+            sb[^1] = ' ';
             return sb.ToString();
         }
     }

@@ -1,46 +1,61 @@
-﻿using FileReader.Helpers;
-using FileReader.Interfaces;
+﻿using FileReader.Interfaces;
 using FileReader.Repositories;
 using FileReader.Services;
+using static FileReader.Helpers.Messages;
 using System;
+using System.Threading.Tasks;
 
 namespace FileReader
 {
     class Initializer
     {
         private IFileService _fileService;
+        private ILogger _logger;
+        private ITimer _timer;
 
-        private Initializer()
+        private Initializer(string inputPath, string outputPath)
         {
-            RegisterCustomDependencies();
+            RegisterCustomDependencies(inputPath, outputPath);
+            InitApp().Wait();
         }
 
-        private void RegisterCustomDependencies()
+        private void RegisterCustomDependencies(string inputPath, string outputPath)
         {
-            LineRepository lineRepository = LineRepository.GetInstance();
-            WordRepository wordRepository = WordRepository.GetInstance();
+            LineRepository lineRepository = new LineRepository();
+            WordRepository wordRepository = new WordRepository();
             LineService lineService = new LineService(lineRepository);
             ComposeService composeService = new ComposeService(lineRepository, wordRepository);
 
-            _fileService = new FileService(lineService, composeService);
+            _fileService = new FileService(lineService, composeService, inputPath, outputPath);
+            _logger = new LoggerService();
+            _timer = new TimerService();
         }
 
-        public static Initializer Build() => new Initializer();
+        private void Done()
+        {
+            _logger.Log(DoneMessage);
+            _logger.Log(_timer.GetElapsed());
+        }
 
-        public void InitApp()
+        public static Initializer Create(string inputPath, string outputPath) => new Initializer(inputPath, outputPath);
+
+        public async Task InitApp()
         {
             try
             {
-                Console.WriteLine(Messages.HelloMessage);
-                string path = Console.ReadLine();
-                var readTask = _fileService.Read(path);
-                readTask.Wait();
-                Console.WriteLine(Messages.DoneMessage);
+                _logger.Log(StartProcessMessage);
+                _timer.SetStartTime();
+                await _fileService.Read();
+                await _fileService.Write();
+                Done(); 
             }
             catch (Exception ex)
             {
-                Console.WriteLine(Messages.ErrorMessage);
+                _logger.LogExceptionMessage(ex);
+                _logger.LogErrorMessage();
             }
         }
+
+        
     }
 }

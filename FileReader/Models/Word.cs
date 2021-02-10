@@ -1,6 +1,6 @@
 ﻿namespace FileReader.Models
 {
-    public class Word
+    public struct Word
     {
         public int Line { get; private set; }
         public string Value { get; private set; }

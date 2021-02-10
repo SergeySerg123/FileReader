@@ -1,36 +1,25 @@
 ﻿using FileReader.Models;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace FileReader.Repositories
 {
     public class LineRepository
     {
-        private static LineRepository instance = null;
-
-        private LineRepository() { }
-
-        public List<Line> Lines { get; private set; } = new List<Line>();
+        public Dictionary<int, Line> Lines { get; private set; } = new Dictionary<int, Line>();
 
         public void Add(Line line)
         {
-            Lines.Add(line);
+            Lines.Add(line.LineNumber, line);
         }
 
         public Line Get(int lineNumber)
         {
-            return Lines.FirstOrDefault(line => line.LineNumber == lineNumber);
+            return Lines.GetValueOrDefault(lineNumber);
         }
 
-        // Singleton instance
-        public static LineRepository GetInstance()
+        public void Remove(int key)
         {
-            if (instance == null)
-            {
-                instance = new LineRepository();
-            }
-
-            return instance;
+            Lines.Remove(key);
         }
     }
 }
