@@ -38,10 +38,12 @@ namespace FileReader.Services
         // Exclude inappropriate words 
         private string[] SplitString(string s)
         {
+
             var pattern = @"[\s\W]";
             string[] words = Regex.Split(s, pattern)
                 .Where(str => str != string.Empty && IsMatched(str))
                 .ToArray();
+
             return words;
         }
 
