@@ -5,8 +5,6 @@ namespace FileReader.Repositories
 {
     public class WordRepository
     {
-        private static WordRepository instance = null;
-
         public Dictionary<string, List<int>> Words { get; private set; } = new Dictionary<string, List<int>>();
 
         public void AddWord(Word word)
@@ -28,17 +26,6 @@ namespace FileReader.Repositories
         public bool IsContainsValue(Word word)
         {
             return Words.ContainsKey(word.Value);
-        }
-
-        // Singleton instance
-        public static WordRepository GetInstance()
-        {
-            if (instance == null)
-            {
-                instance = new WordRepository();
-            }
-
-            return instance;
         }
     }
 }

@@ -20,7 +20,7 @@ namespace FileReader.Services
         {
             foreach(var line in _lineRepository.Lines)
             {
-                line.Words.ForEach(word =>
+                line.Value.Words.ForEach(word =>
                 {
                     var IsContains = _wordRepository.IsContainsValue(word);
                     if (IsContains)

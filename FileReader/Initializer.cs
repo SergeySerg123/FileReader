@@ -9,6 +9,7 @@ namespace FileReader
     class Initializer
     {
         private IFileService _fileService;
+        private DateTime _startTime;
 
         private Initializer()
         {
@@ -17,8 +18,8 @@ namespace FileReader
 
         private void RegisterCustomDependencies()
         {
-            LineRepository lineRepository = LineRepository.GetInstance();
-            WordRepository wordRepository = WordRepository.GetInstance();
+            LineRepository lineRepository = new LineRepository();
+            WordRepository wordRepository = new WordRepository();
             LineService lineService = new LineService(lineRepository);
             ComposeService composeService = new ComposeService(lineRepository, wordRepository);
 
@@ -33,9 +34,11 @@ namespace FileReader
             {
                 Console.WriteLine(Messages.HelloMessage);
                 string path = Console.ReadLine();
+                _startTime = DateTime.Now;
                 var readTask = _fileService.Read(path);
                 readTask.Wait();
-                Console.WriteLine(Messages.DoneMessage);
+                var elapsed = DateTime.Now - _startTime;
+                Console.WriteLine(Messages.DoneMessage + elapsed.Minutes + "mn " + elapsed.Seconds + "s " + elapsed.Milliseconds + "ms");
             }
             catch (Exception ex)
             {

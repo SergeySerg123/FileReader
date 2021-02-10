@@ -1,6 +1,5 @@
 ﻿using FileReader.Models;
 using FileReader.Repositories;
-using System;
 using System.Text.RegularExpressions;
 
 namespace FileReader.Services
@@ -33,19 +32,17 @@ namespace FileReader.Services
                     {
                         var word = Word.Create(lineNumber, w.ToUpper());
                         line.Words.Add(word);
-                    } 
+                    }
                 }
             }
         }
-
         private string[] SplitString(string s)
         {
-            char[] separators = new char[] { ' ', '.', '!', '?', ';', ':', ')', '(', '/', '\r' };
-            string[] words = s.Split(separators, StringSplitOptions.RemoveEmptyEntries);
+            var pattern = @"[\s\W]";
+            string[] words = Regex.Split(s, pattern);
             return words;
         }
 
-        // Words validation rules
         private bool IsMatched(string str)
         {
             var regex = new Regex("[a-zA-Z0-9]");
